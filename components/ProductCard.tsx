@@ -22,13 +22,19 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Link href={`/products/${product.id}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="relative h-64 bg-gray-100">
-          <Image
-            src={product.image.url}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {product.image?.url ? (
+            <Image
+              src={product.image.url}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-400">
+              画像なし
+            </div>
+          )}
         </div>
         <div className="p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
@@ -39,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
           <div className="flex items-center justify-between">
             <span className="text-2xl font-bold text-gray-900">
-              ¥{product.price.toLocaleString()}
+              ¥{typeof product.price === 'number' ? product.price.toLocaleString() : product.price || '価格未設定'}
             </span>
             <button
               onClick={handleAddToCart}
@@ -48,11 +54,11 @@ export default function ProductCard({ product }: ProductCardProps) {
               カートに追加
             </button>
           </div>
-          {product.stock > 0 ? (
+          {typeof product.stock === 'number' && product.stock > 0 ? (
             <p className="text-sm text-gray-500 mt-2">在庫: {product.stock}</p>
-          ) : (
+          ) : typeof product.stock === 'number' && product.stock === 0 ? (
             <p className="text-sm text-red-500 mt-2">在庫切れ</p>
-          )}
+          ) : null}
         </div>
       </div>
     </Link>

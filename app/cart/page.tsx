@@ -14,24 +14,27 @@ export default function CartPage() {
 
   if (cart.items.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">ショッピングカート</h1>
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-600 text-lg mb-4">カートは空です</p>
-          <button
-            onClick={() => router.push('/products')}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            商品を見る
-          </button>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">ショッピングカート</h1>
+          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+            <p className="text-gray-600 text-lg mb-4">カートは空です</p>
+            <button
+              onClick={() => router.push('/products')}
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              商品を見る
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">ショッピングカート</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">ショッピングカート</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
@@ -42,12 +45,18 @@ export default function CartPage() {
                 className="flex items-center gap-4 p-6 border-b last:border-b-0"
               >
                 <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
-                  <Image
-                    src={item.product.image.url}
-                    alt={item.product.name}
-                    fill
-                    className="object-cover"
-                  />
+                  {item.product.image?.url ? (
+                    <Image
+                      src={item.product.image.url}
+                      alt={item.product.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-400 text-xs">
+                      画像なし
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-grow">
@@ -55,7 +64,7 @@ export default function CartPage() {
                     {item.product.name}
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    ¥{item.product.price.toLocaleString()}
+                    ¥{typeof item.product.price === 'number' ? item.product.price.toLocaleString() : item.product.price || '価格未設定'}
                   </p>
                   <div className="flex items-center gap-2">
                     <label htmlFor={`quantity-${item.product.id}`} className="text-sm text-gray-600">
@@ -70,14 +79,14 @@ export default function CartPage() {
                       onChange={(e) =>
                         updateQuantity(item.product.id, parseInt(e.target.value) || 1)
                       }
-                      className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-2">
                   <p className="text-lg font-bold text-gray-900">
-                    ¥{(item.product.price * item.quantity).toLocaleString()}
+                    ¥{typeof item.product.price === 'number' ? (item.product.price * item.quantity).toLocaleString() : '価格未設定'}
                   </p>
                   <button
                     onClick={() => removeFromCart(item.product.id)}
@@ -115,7 +124,7 @@ export default function CartPage() {
 
             <button
               onClick={handleCheckout}
-              className="w-full bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium mb-4"
+              className="w-full bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors font-medium mb-4 shadow-sm"
             >
               購入手続きへ
             </button>
@@ -128,6 +137,7 @@ export default function CartPage() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

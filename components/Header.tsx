@@ -48,10 +48,10 @@ export default function Header() {
 
             {session ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-700">{session.user?.name}</span>
+                <span className="text-sm text-gray-700 font-medium">{session.user?.name}</span>
                 <button
                   onClick={() => signOut()}
-                  className="text-sm text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                 >
                   ログアウト
                 </button>
@@ -59,7 +59,7 @@ export default function Header() {
             ) : (
               <button
                 onClick={() => signIn()}
-                className="text-sm text-gray-700 hover:text-gray-900"
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
               >
                 ログイン
               </button>
