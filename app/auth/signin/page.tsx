@@ -4,6 +4,9 @@ import { signIn } from 'next-auth/react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, Suspense } from 'react';
 
+// このページは動的レンダリングが必要
+export const dynamic = 'force-dynamic';
+
 function SignInForm() {
   const searchParams = useSearchParams();
   const router = useRouter();

@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
 
+// このページは動的レンダリングが必要
+export const dynamic = 'force-dynamic';
+
 function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
