@@ -22,6 +22,7 @@ export default function ProductDetailPage() {
           throw new Error('商品が見つかりません');
         }
         const data = await response.json();
+        console.log('Fetched product data:', data);
         setProduct(data);
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -65,23 +66,31 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative h-96 md:h-[600px] bg-gray-100 rounded-lg overflow-hidden">
-          <Image
-            src={product.image.url}
-            alt={product.name}
-            fill
-            className="object-cover"
-            priority
-          />
+          {product.image?.url ? (
+            <Image
+              src={product.image.url}
+              alt={product.name}
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-400">
+              画像なし
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
 
           <div className="text-4xl font-bold text-gray-900 mb-6">
-            ¥{product.price.toLocaleString()}
+            ¥{typeof product.price === 'number' ? product.price.toLocaleString() : product.price || '価格未設定'}
           </div>
 
           <p className="text-gray-600 mb-6 leading-relaxed">{product.description}</p>
@@ -91,7 +100,7 @@ export default function ProductDetailPage() {
             <span className="text-sm font-medium text-gray-900">{product.category}</span>
           </div>
 
-          {product.stock > 0 ? (
+          {typeof product.stock === 'number' && product.stock > 0 ? (
             <>
               <div className="mb-6">
                 <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
@@ -104,7 +113,7 @@ export default function ProductDetailPage() {
                   max={product.stock}
                   value={quantity}
                   onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
                 <span className="ml-4 text-sm text-gray-500">在庫: {product.stock}</span>
               </div>
@@ -112,13 +121,13 @@ export default function ProductDetailPage() {
               <div className="flex gap-4 mb-6">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium shadow-sm"
                 >
                   カートに追加
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors font-medium"
+                  className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors font-medium shadow-sm"
                 >
                   今すぐ購入
                 </button>
@@ -136,6 +145,8 @@ export default function ProductDetailPage() {
           >
             ← 商品一覧に戻る
           </button>
+        </div>
+      </div>
         </div>
       </div>
     </div>

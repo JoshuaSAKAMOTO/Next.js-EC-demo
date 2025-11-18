@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
@@ -10,16 +10,52 @@ export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const { clearCart } = useCart();
+  const hasCleared = useRef(false);
 
   useEffect(() => {
-    if (sessionId) {
-      clearCart();
-    }
+    const completeOrder = async () => {
+      if (sessionId && !hasCleared.current) {
+        try {
+          console.log('Completing order and clearing cart');
+
+          // 注文完了処理（在庫更新）
+          const response = await fetch('/api/complete-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ sessionId }),
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            console.error('Order completion failed:', error);
+          } else {
+            const result = await response.json();
+            console.log('Order completed successfully:', result);
+          }
+
+          // カートをクリア
+          clearCart();
+          hasCleared.current = true;
+          localStorage.removeItem('cart');
+        } catch (error) {
+          console.error('Error completing order:', error);
+          // エラーが発生してもカートはクリアする
+          clearCart();
+          hasCleared.current = true;
+          localStorage.removeItem('cart');
+        }
+      }
+    };
+
+    completeOrder();
   }, [sessionId, clearCart]);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
         <div className="mb-6">
           <svg
             className="w-16 h-16 text-green-500 mx-auto"
@@ -73,6 +109,7 @@ export default function CheckoutSuccessPage() {
             ホームに戻る
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );

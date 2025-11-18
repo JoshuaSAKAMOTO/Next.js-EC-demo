@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
         product_data: {
           name: item.product.name,
           description: item.product.description,
-          images: [item.product.image.url],
+          images: item.product.image?.url ? [item.product.image.url] : [],
         },
         unit_amount: Math.round(item.product.price),
       },
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url, sessionId: session.id });
   } catch (error) {
     console.error('Checkout error:', error);
     return NextResponse.json(

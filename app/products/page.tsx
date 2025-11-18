@@ -7,8 +7,9 @@ export default async function ProductsPage() {
   const data = await getProducts({ limit: 100 });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">商品一覧</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">商品一覧</h1>
 
       {data.contents.length === 0 ? (
         <div className="text-center py-12">
@@ -24,6 +25,7 @@ export default async function ProductsPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
