@@ -1,31 +1,38 @@
 import { createClient } from 'microcms-js-sdk';
 import { Product, ProductsResponse } from '@/types/product';
 
-if (!process.env.MICROCMS_SERVICE_DOMAIN) {
-  throw new Error('MICROCMS_SERVICE_DOMAIN is required');
-}
+type MicroCMSClientType = ReturnType<typeof createClient>;
 
-if (!process.env.MICROCMS_API_KEY) {
-  throw new Error('MICROCMS_API_KEY is required');
-}
+let clientInstance: MicroCMSClientType | null = null;
 
-export const client = createClient({
-  serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
-  apiKey: process.env.MICROCMS_API_KEY,
-});
+const getClient = (): MicroCMSClientType => {
+  if (!clientInstance) {
+    if (!process.env.MICROCMS_SERVICE_DOMAIN) {
+      throw new Error('MICROCMS_SERVICE_DOMAIN is required');
+    }
+    if (!process.env.MICROCMS_API_KEY) {
+      throw new Error('MICROCMS_API_KEY is required');
+    }
+    clientInstance = createClient({
+      serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN,
+      apiKey: process.env.MICROCMS_API_KEY,
+    });
+  }
+  return clientInstance;
+};
 
 export const getProducts = async (queries?: {
   limit?: number;
   offset?: number;
 }): Promise<ProductsResponse> => {
-  return await client.get<ProductsResponse>({
+  return await getClient().get<ProductsResponse>({
     endpoint: 'products',
     queries,
   });
 };
 
 export const getProductById = async (productId: string): Promise<Product> => {
-  return await client.get<Product>({
+  return await getClient().get<Product>({
     endpoint: 'products',
     contentId: productId,
   });
