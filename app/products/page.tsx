@@ -1,7 +1,7 @@
 import { getProducts } from '@/lib/microcms';
 import ProductCard from '@/components/ProductCard';
 
-export const revalidate = 60; // 60秒ごとに再検証
+export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
   const data = await getProducts({ limit: 100 });

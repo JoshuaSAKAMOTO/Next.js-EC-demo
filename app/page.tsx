@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getProducts } from '@/lib/microcms';
 import ProductCard from '@/components/ProductCard';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const data = await getProducts({ limit: 6 });
